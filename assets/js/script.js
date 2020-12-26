@@ -282,50 +282,19 @@ var saveTasks = function(){
 // converts tasks form string format back into array of objects
 // iterates through tasks array and creates task element on page from it
 var loadTasks = function(){
-  tasks = localStorage.getItem("tasks", Array.from(saveTasks));
-  console.log(tasks);
+  var savedTasks = localStorage.getItem("tasks");
 
-  if(!tasks){
-    tasks = [];
+  if(!savedTasks){
     return false;
   }
   
-  tasks = JSON.parse(tasks);
-  console.log(tasks);
+  savedTasks = JSON.parse(savedTasks);
 
-  for(var i = 0; i < tasks.length; i++){
-   
-    tasks[i].id = taskIdCounter
-    console.log(tasks[i]);
-    
-    var listItemEl = document.createElement("li");
-    listItemEl.className = "task-item";
-    listItemEl.setAttribute("data-task-id", tasks[i].id);
-    listItemEl.setAttribute("draggable", "true");
-
-    var taskInfoEl = document.createElement("div");
-    taskInfoEl.className = "task-info";
-    taskInfoEl.innerHTML = "<h3 class='task-name'>" + tasks[i].name + "</h3><span class='task-type'>" + tasks[i].type + "</span>";
-    var taskActionsEl = createTaskActions(taskIdCounter);
-    listItemEl.appendChild(taskActionsEl);
-    tasksToDoEl.appendChild(listItemEl);
-
-    if(tasks[i].status === "to do"){
-      listItemEl.querySelector("select[name='status-change']").selectedIndex = 0;
-      tasksToDoEl.appendChild(listItemEl);
-    }else if(tasks[i].status === "in progress"){
-      listItemEl.querySelector("select[name='status-change']").selectedIndex = 1;
-      tasksToDoEl.appendChild(listItemEl);
-    }else if(tasks[i].status === "complete"){
-      listItemEl.querySelector("select[name='status-change']").selectedIndex = 2;
-      tasksToDoEl.appendChild(listItemEl);
-    }
-    taskIdCounter++;
-    console.log(listItemEl);
-  }
-
-  
-
+  // loop through savedTasks array
+  for (var i = 0; i < savedTasks.length; i++) {
+  // pass each task object into the `createTaskEl()` function
+  createTaskEl(savedTasks[i]);
+}
 }
 // Create a new task
 formEl.addEventListener("submit", taskFormHandler);
